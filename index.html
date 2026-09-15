@@ -31,6 +31,7 @@
     }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
+    [id] { scroll-margin-top: 140px; }
     body {
       margin: 0;
       background: var(--carbon);
@@ -38,7 +39,7 @@
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       font-size: 16px;
       font-weight: 500;
-      letter-spacing: .012em;
+      letter-spacing: .025em;
       line-height: 1.6;
     }
     img { display: block; max-width: 100%; }
@@ -56,9 +57,10 @@
     }
     .nav { min-height: 78px; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
     .brand img { width: 176px; height: auto; }
-    .nav-links { display: flex; align-items: center; gap: 1.5rem; }
-    .nav-links > a:not(.button) { color: #d7d9dc; text-decoration: none; font-size: .94rem; font-weight: 800; }
-    .nav-links > a:not(.button):hover { color: var(--white); }
+    .nav-links { display: flex; align-items: center; gap: .45rem; }
+    .nav-links a { padding: .55rem .8rem; border: 1px solid #34383e; border-radius: 999px; color: #e4e6e8; text-decoration: none; font-size: .86rem; font-weight: 800; letter-spacing: .055em; white-space: nowrap; }
+    .nav-links a:hover, .nav-links a:focus-visible { border-color: var(--red); color: var(--white); }
+    .nav-links .shop-link { border-color: var(--red); }
     .button {
       display: inline-flex;
       align-items: center;
@@ -70,8 +72,9 @@
       border-radius: 999px;
       background: var(--red);
       color: var(--white);
-      font-family: "Boost Display", Impact, sans-serif;
-      font-weight: 900;
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      font-size: .94rem;
+      font-weight: 800;
       letter-spacing: .035em;
       text-decoration: none;
       transition: transform .2s ease, background .2s ease;
@@ -79,6 +82,7 @@
     .button:hover { transform: translateY(-2px); background: #e20b13; }
     .button.secondary { background: transparent; border-color: #666c74; }
     .button.secondary:hover { border-color: var(--white); background: rgba(255,255,255,.05); }
+    .label-short { display: none; }
     .icon { width: 20px; height: 20px; flex: none; fill: currentColor; }
     .hero {
       position: relative;
@@ -105,23 +109,19 @@
       box-shadow: 0 32px 0 rgba(209,10,17,.5), 0 64px 0 rgba(209,10,17,.22);
     }
     .hero::after { top: auto; bottom: 18%; right: -16rem; opacity: .5; }
-    .hero-grid { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(280px, .72fr); gap: 4rem; align-items: center; padding-block: 6.5rem; }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; padding-block: 6.5rem; }
     .eyebrow { margin: 0 0 1rem; color: #ff474d; font-family: "Boost Display", Impact, sans-serif; font-size: .92rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
-    h1, h2, h3 { margin-top: 0; font-family: "Boost Display", Impact, sans-serif; font-weight: 900; letter-spacing: .025em; line-height: .96; text-transform: uppercase; }
+    h1, h2, h3 { margin-top: 0; font-family: "Boost Display", Impact, sans-serif; font-weight: 900; letter-spacing: .06em; line-height: 1.06; text-transform: uppercase; }
     h1 { max-width: 820px; margin-bottom: 1.4rem; font-size: clamp(3.2rem, 6.7vw, 6.5rem); }
     h1 span { color: var(--red); }
     .hero-copy > p:not(.eyebrow) { max-width: 650px; margin: 0 0 2rem; color: #c6c9cd; font-size: clamp(1.05rem, 2vw, 1.25rem); }
     .hero-actions { display: flex; flex-wrap: wrap; gap: .8rem; }
-    .hero-card { position: relative; padding: 1.5rem; border: 1px solid var(--line); border-radius: 24px; background: rgba(23,25,29,.8); box-shadow: 0 28px 80px rgba(0,0,0,.35); }
-    .hero-card img { width: 100%; max-width: 320px; margin: 0 auto 1.4rem; }
-    .hero-card p { margin: 0; color: #b8bdc2; }
-    .hero-card strong { display: block; margin-bottom: .35rem; color: var(--white); font-size: 1.08rem; }
     .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; border-block: 1px solid var(--line); background: var(--line); }
     .stat { padding: 1.6rem 1rem; background: #111318; text-align: center; }
     .stat strong { display: block; color: var(--white); font-family: "Boost Display", Impact, sans-serif; font-size: 1.35rem; letter-spacing: .03em; text-transform: uppercase; }
     .stat span { color: var(--steel); font-size: .88rem; }
     section { padding-block: 6rem; }
-    .section-head { display: grid; grid-template-columns: .75fr 1.25fr; gap: 2rem; align-items: end; margin-bottom: 2.6rem; }
+    .section-head { display: grid; grid-template-columns: 1.1fr .9fr; gap: 2rem; align-items: end; margin-bottom: 2.6rem; }
     .section-head h2 { margin-bottom: 0; font-size: clamp(2.45rem, 5vw, 4.6rem); }
     .section-head p { max-width: 640px; margin: 0; color: var(--steel); }
     .services { background: var(--paper); color: var(--carbon); }
@@ -149,28 +149,34 @@
     }
     .service summary::-webkit-details-marker { display: none; }
     .service summary:focus-visible { outline: 3px solid rgba(209,10,17,.35); outline-offset: -3px; }
-    .service h3 { margin: 0; font-size: 1.28rem; line-height: 1.08; }
+    .service h3 { margin: 0; font-size: 1.28rem; line-height: 1.14; letter-spacing: .075em; }
     .service-toggle { position: relative; width: 28px; height: 28px; flex: none; border-radius: 50%; background: #f0f1f2; }
     .service-toggle::before, .service-toggle::after { content: ""; position: absolute; left: 8px; right: 8px; top: 13px; height: 2px; background: var(--red); }
     .service-toggle::after { transform: rotate(90deg); transition: transform .18s ease; }
     .service[open] .service-toggle::after { transform: rotate(0); }
     .service-body { display: grid; grid-template-columns: minmax(0, 1fr) 190px; gap: 1.2rem; align-items: center; padding: 0 1.2rem 1.2rem; border-top: 1px solid #ececee; }
-    .service p { margin: 1rem 0 0; color: #50555b; font-size: .96rem; letter-spacing: .018em; }
+    .service p { margin: 1rem 0 0; color: #50555b; font-size: .96rem; letter-spacing: .03em; line-height: 1.6; }
     .service-photo { position: relative; width: 190px; height: 145px; margin: 1rem 0 0; overflow: hidden; border-radius: 12px; background: #191b1f; }
-    .service-photo img { position: absolute; width: 600px; max-width: none; height: auto; }
-    .crop-top img { left: -365px; top: -285px; }
-    .crop-bottom img { left: -38px; top: -770px; }
-    .crop-sale img { width: 430px; left: -72px; top: -350px; }
+    .service-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .service-note { margin: 2rem 0 0; color: #62676d; text-align: center; }
     .proof { background: #111318; }
-    .proof-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 3.5rem; align-items: center; }
+    .proof-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .85fr); gap: 3.5rem; align-items: center; }
     .proof-copy h2 { font-size: clamp(2.6rem, 5vw, 5rem); }
     .proof-copy p { color: #bfc3c7; }
-    .check-list { display: grid; gap: .85rem; margin: 1.6rem 0 0; padding: 0; list-style: none; }
-    .check-list li { display: flex; gap: .8rem; align-items: flex-start; color: #e4e5e6; }
-    .check-list li::before { content: ""; width: 9px; height: 9px; flex: none; margin-top: .5rem; border-radius: 50%; background: var(--red); box-shadow: 0 0 0 5px rgba(209,10,17,.14); }
-    .proof-image { overflow: hidden; border: 1px solid #353940; border-radius: 24px; background: #202328; }
-    .proof-image img { width: 100%; aspect-ratio: 4 / 4.7; object-fit: cover; }
+    .proof-copy .button { margin-top: 1.5rem; }
+    .social-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+    .social-tile { min-height: 190px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .65rem; padding: 1.5rem; border: 1px solid #353940; border-radius: 20px; background: #191b20; text-align: center; text-decoration: none; }
+    .social-tile svg { width: 50px; height: 50px; fill: currentColor; }
+    .social-tile strong { font-size: 1rem; letter-spacing: .055em; }
+    .social-tile small { color: var(--steel); font-size: .85rem; }
+    .social-tile.instagram { color: #fff; border-top: 4px solid var(--red); }
+    .social-tile.instagram:hover { background: #24272d; }
+    .social-tile.facebook { color: #aab2bd; }
+    .shop { padding-block: 4.5rem; border-top: 1px solid var(--line); background: #17191d; }
+    .shop-box { display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
+    .shop-box h2 { margin-bottom: .6rem; font-size: clamp(2.2rem, 4vw, 3.8rem); }
+    .shop-box p:last-child { max-width: 680px; margin: 0; color: var(--steel); }
+    .shop-status { flex: none; padding: .65rem 1rem; border: 1px solid var(--red); border-radius: 999px; color: var(--white); font-weight: 800; letter-spacing: .06em; }
     .steps { background: var(--carbon); }
     .step-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.2rem; }
     .step { padding-top: 1.5rem; border-top: 2px solid #3b3f45; }
@@ -195,18 +201,22 @@
     .contact-box p { max-width: 620px; margin: 0; color: #fff1f1; }
     .contact-actions { display: grid; gap: .8rem; justify-items: stretch; }
     .contact-actions .button { border-color: var(--white); background: var(--white); color: var(--carbon); }
-    .contact-actions small { color: #ffe1e1; text-align: center; }
     footer { padding: 2.2rem 0 7rem; border-top: 1px solid var(--line); }
     .footer-grid { display: flex; justify-content: space-between; gap: 2rem; align-items: center; color: var(--steel); }
+    .footer-brand { display: flex; align-items: center; gap: 1rem; }
+    .footer-brand img { width: 100px; height: auto; }
+    .footer-brand address { font-style: normal; line-height: 1.45; }
     .footer-grid a { text-decoration: none; }
     .footer-grid a:hover { color: var(--white); }
     .mobile-whatsapp { display: none; }
     @media (max-width: 900px) {
-      .nav-links > a:not(.button) { display: none; }
       .hero { min-height: auto; }
       .hero-grid, .section-head, .proof-grid, .contact-box { grid-template-columns: 1fr; }
-      .hero-grid { gap: 2.5rem; padding-block: 5rem; }
-      .hero-card { max-width: 520px; }
+      .hero-grid { padding-block: 5rem; }
+      .nav { flex-wrap: wrap; padding-block: .7rem; }
+      .nav-links { order: 3; width: 100%; overflow-x: auto; padding-bottom: .2rem; }
+      .shop-box { display: block; }
+      .shop-status { display: inline-block; margin-top: 1.4rem; }
       .service-list { grid-template-columns: 1fr; }
       .section-head { align-items: start; }
       .contact-actions { justify-items: start; }
@@ -214,9 +224,10 @@
     @media (max-width: 620px) {
       .wrap { width: min(calc(100% - 1.25rem), var(--max)); }
       .nav { min-height: 68px; }
-      .brand img { width: 146px; }
-      .nav .button { min-height: 42px; padding: .55rem .8rem; font-size: .86rem; }
+      .brand img { width: 126px; }
+      .nav .button { min-height: 42px; padding: .55rem .8rem; font-size: .84rem; }
       .nav .button .label-long { display: none; }
+      .nav .button .label-short { display: inline; }
       h1 { font-size: clamp(3rem, 16vw, 4.6rem); }
       section { padding-block: 4.5rem; }
       .stats { grid-template-columns: 1fr; }
@@ -225,6 +236,9 @@
       .service-body { grid-template-columns: 1fr; }
       .service-photo { width: 100%; height: 170px; }
       .proof-grid { gap: 2rem; }
+      .social-tile { min-height: 150px; padding: 1rem; }
+      .social-tile svg { width: 38px; height: 38px; }
+      .footer-brand { align-items: flex-start; }
       .footer-grid { display: grid; }
       .mobile-whatsapp {
         position: fixed;
@@ -255,6 +269,7 @@
     "url": "https://www.instagram.com/boostgaragedetail/",
     "telephone": "+54 9 11 6520-1932",
     "areaServed": "Wilde, Buenos Aires",
+    "address": {"@type":"PostalAddress","streetAddress":"Cordero 5686","addressLocality":"Wilde","addressRegion":"Buenos Aires","addressCountry":"AR"},
     "sameAs": ["https://www.instagram.com/boostgaragedetail/"],
     "hasOfferCatalog": {
       "@type": "OfferCatalog",
@@ -280,13 +295,14 @@
       </a>
       <nav class="nav-links" aria-label="Navegación principal">
         <a href="#servicios">Servicios</a>
-        <a href="#resultados">Resultados</a>
+        <a href="#resultados">Trabajos</a>
+        <a class="shop-link" href="#tienda">Tienda</a>
         <a href="#contacto">Contacto</a>
-        <a class="button" href="https://wa.me/5491165201932?text=Hola%20Boost%20Garage%2C%20quiero%20consultar%20por%20un%20servicio" target="_blank" rel="noopener">
-          <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12.04 2a9.84 9.84 0 0 0-8.48 14.8L2 22l5.34-1.5A9.94 9.94 0 1 0 12.04 2Zm0 17.98a8.1 8.1 0 0 1-4.13-1.13l-.3-.18-3.17.89.85-3.08-.2-.32A8.02 8.02 0 1 1 12.04 20Zm4.45-6.03c-.24-.12-1.44-.71-1.67-.79-.22-.08-.38-.12-.55.12-.16.24-.63.79-.77.95-.14.16-.28.18-.53.06-.24-.12-1.03-.38-1.96-1.21a7.35 7.35 0 0 1-1.35-1.68c-.14-.24-.01-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.32-.75-1.81-.2-.48-.4-.4-.55-.41h-.47c-.16 0-.42.06-.65.3-.22.24-.85.83-.85 2.03 0 1.19.87 2.35.99 2.51.12.16 1.71 2.61 4.14 3.66.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.44-.59 1.64-1.15.2-.57.2-1.05.14-1.15-.06-.1-.22-.16-.47-.28Z"/></svg>
-          <span class="label-long">Consultar por</span> WhatsApp
-        </a>
       </nav>
+        <a class="button" href="https://wa.me/5491165201932?text=Hola%20Boost%20Garage%2C%20quiero%20consultar%20por%20un%20servicio" target="_blank" rel="noopener noreferrer">
+          <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12.04 2a9.84 9.84 0 0 0-8.48 14.8L2 22l5.34-1.5A9.94 9.94 0 1 0 12.04 2Zm0 17.98a8.1 8.1 0 0 1-4.13-1.13l-.3-.18-3.17.89.85-3.08-.2-.32A8.02 8.02 0 1 1 12.04 20Zm4.45-6.03c-.24-.12-1.44-.71-1.67-.79-.22-.08-.38-.12-.55.12-.16.24-.63.79-.77.95-.14.16-.28.18-.53.06-.24-.12-1.03-.38-1.96-1.21a7.35 7.35 0 0 1-1.35-1.68c-.14-.24-.01-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.32-.75-1.81-.2-.48-.4-.4-.55-.41h-.47c-.16 0-.42.06-.65.3-.22.24-.85.83-.85 2.03 0 1.19.87 2.35.99 2.51.12.16 1.71 2.61 4.14 3.66.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.44-.59 1.64-1.15.2-.57.2-1.05.14-1.15-.06-.1-.22-.16-.47-.28Z"/></svg>
+          <span class="label-long">Consultar por WhatsApp</span><span class="label-short">WhatsApp</span>
+        </a>
     </div>
   </header>
 
@@ -294,7 +310,6 @@
     <section class="hero" id="inicio">
       <div class="wrap hero-grid">
         <div class="hero-copy">
-          <p class="eyebrow">Boost Garage Car Detail</p>
           <h1>Lavado y detailing de autos <span>en Wilde.</span></h1>
           <p>Lavadero, mantenimiento estético, pulidos, limpieza de tapizados, polarizados y tratamientos de protección para tu auto.</p>
           <div class="hero-actions">
@@ -302,73 +317,68 @@
             <a class="button secondary" href="#servicios">Ver servicios</a>
           </div>
         </div>
-        <aside class="hero-card" aria-label="Información de atención">
-          <img src="assets/boost-garage-logo.png" alt="" aria-hidden="true">
-          <strong>Wilde y alrededores</strong>
-          <p>Contanos qué necesita tu vehículo y te recomendamos el tratamiento adecuado.</p>
-        </aside>
       </div>
     </section>
 
     <div class="stats" aria-label="Características del servicio">
       <div class="stat"><strong>Atención directa</strong><span>Consultas por WhatsApp</span></div>
       <div class="stat"><strong>Trabajo detallado</strong><span>Procesos según cada vehículo</span></div>
-      <div class="stat"><strong>Resultados reales</strong><span>Antes y después sin exageraciones</span></div>
+      <div class="stat"><strong>Trabajos en redes</strong><span>Conocé nuestra actividad en Instagram</span></div>
     </div>
 
     <section class="services" id="servicios">
       <div class="wrap">
         <div class="section-head">
-          <div><p class="eyebrow">Nuestros servicios</p><h2>Lavado y mantenimiento estético</h2></div>
+          <div><p class="eyebrow">Detalle para tu auto</p><h2>Nuestros servicios de mantenimiento estético</h2></div>
           <p>Desde una limpieza profunda hasta tratamientos de protección. Consultanos para definir el servicio más conveniente según el estado y el uso de tu vehículo.</p>
         </div>
         <div class="service-list">
           <div class="service-column">
             <details class="service">
               <summary><h3>Lavado al detalle</h3><span class="service-toggle" aria-hidden="true"></span></summary>
-              <div class="service-body"><p>Limpieza minuciosa de carrocería, llantas, emblemas y zonas de difícil acceso para lograr máxima prolijidad.</p><figure class="service-photo crop-bottom"><img src="assets/servicios/lavados.png" alt="Trabajo de lavado al detalle realizado por Boost Garage"></figure></div>
+              <div class="service-body"><p>Una limpieza minuciosa que va más allá de lo visible: trabajamos carrocería, llantas, emblemas y rincones de difícil acceso con atención a cada terminación. Buscamos devolverle al auto una presencia impecable, cuidando sus superficies durante todo el proceso.</p><figure class="service-photo"><img src="assets/servicios-generados/lavado.jpg" alt="Lavado al detalle de un vehículo en un taller profesional"></figure></div>
             </details>
             <details class="service">
               <summary><h3>Limpieza interior completa</h3><span class="service-toggle" aria-hidden="true"></span></summary>
-              <div class="service-body"><p>Tratamiento de alfombras, paneles, techo, plásticos y baúl para recuperar higiene, presentación y confort.</p><figure class="service-photo crop-top"><img src="assets/servicios/interior-tapizados.png" alt="Limpieza interior de un vehículo en proceso"></figure></div>
+              <div class="service-body"><p>El interior merece el mismo cuidado que la carrocería. Limpiamos alfombras, paneles, techo, plásticos y baúl para renovar la sensación de orden, higiene y confort. Ponemos especial atención en las zonas de uso diario y en los detalles que suelen pasar inadvertidos.</p><figure class="service-photo"><img src="assets/servicios-generados/interior-tapizados.jpg" alt="Limpieza profesional del interior de un vehículo"></figure></div>
             </details>
             <details class="service">
               <summary><h3>Pulido y abrillantado</h3><span class="service-toggle" aria-hidden="true"></span></summary>
-              <div class="service-body"><p>Pulido de la carrocería para recuperar brillo, profundidad de color y mejorar el acabado general de la pintura.</p><figure class="service-photo crop-top"><img src="assets/servicios/pulido-ceramico.png" alt="Pulido de carrocería realizado con máquina"></figure></div>
+              <div class="service-body"><p>Trabajamos la pintura para realzar su brillo, recuperar profundidad de color y mejorar la claridad del acabado. El proceso se define según el estado de la carrocería: buscamos una superficie más pareja y luminosa, con reflejos que vuelvan a destacar las líneas del vehículo.</p><figure class="service-photo"><img src="assets/servicios-generados/pulido.jpg" alt="Pulido profesional de la pintura con máquina orbital"></figure></div>
             </details>
             <details class="service">
               <summary><h3>Tratamiento cerámico o acrílico</h3><span class="service-toggle" aria-hidden="true"></span></summary>
-              <div class="service-body"><p>Corrección y protección de la pintura con el tratamiento indicado según el estado del vehículo y el resultado buscado.</p><figure class="service-photo crop-bottom"><img src="assets/servicios/pulido-ceramico.png" alt="Aplicación de protección sobre la pintura del vehículo"></figure></div>
+              <div class="service-body"><p>Después de preparar la superficie, aplicamos la protección adecuada para potenciar el acabado y facilitar su cuidado cotidiano. Cerámico o acrílico: la elección depende de la pintura, el uso del auto y tus expectativas. Te explicamos qué aporta cada alternativa antes de realizar el trabajo.</p><figure class="service-photo"><img src="assets/servicios-generados/ceramico.jpg" alt="Aplicación de tratamiento cerámico sobre la pintura"></figure></div>
             </details>
             <details class="service">
               <summary><h3>Restauración de ópticas</h3><span class="service-toggle" aria-hidden="true"></span></summary>
-              <div class="service-body"><p>Lijado y tratamiento para reducir opacidad y amarilleo, mejorando la estética y la visibilidad nocturna.</p><figure class="service-photo crop-bottom"><img src="assets/servicios/motor-opticas.png" alt="Óptica durante un trabajo de restauración"></figure></div>
+              <div class="service-body"><p>Las ópticas opacas o amarillentas cambian por completo la expresión del auto. Mediante un proceso de lijado y tratamiento, buscamos recuperar transparencia y mejorar su apariencia. Una intervención precisa que puede favorecer la proyección de luz, según el estado de cada lente.</p><figure class="service-photo"><img src="assets/servicios-generados/opticas.jpg" alt="Restauración profesional de una óptica opaca"></figure></div>
             </details>
             <details class="service">
               <summary><h3>Limpieza de tapizados</h3><span class="service-toggle" aria-hidden="true"></span></summary>
-              <div class="service-body"><p>Tratamiento para telas, cuero y alcántara orientado a remover manchas, polvo y olores.</p><figure class="service-photo crop-bottom"><img src="assets/servicios/interior-tapizados.png" alt="Limpieza de un tapizado con herramienta de extracción"></figure></div>
+              <div class="service-body"><p>Los asientos concentran el uso diario y merecen un tratamiento específico. Trabajamos telas, cuero o alcántara con el método apropiado para cada material, orientado a reducir suciedad, manchas y olores. El objetivo es recuperar una presentación agradable sin descuidar la textura ni la integridad del tapizado.</p><figure class="service-photo"><img src="assets/servicios-generados/interior-tapizados.jpg" alt="Limpieza de tapizado con herramienta de extracción"></figure></div>
             </details>
           </div>
           <div class="service-column">
             <details class="service">
               <summary><h3>Lavado completo</h3><span class="service-toggle" aria-hidden="true"></span></summary>
-              <div class="service-body"><p>Limpieza exterior e interior con cuidado de pintura, vidrios, plásticos, ruedas y terminaciones.</p><figure class="service-photo crop-top"><img src="assets/servicios/lavados.png" alt="Lavado exterior completo de un vehículo"></figure></div>
+              <div class="service-body"><p>Una puesta a punto integral para que el auto se vea y se sienta mejor. Atendemos exterior e interior, cuidando pintura, vidrios, plásticos, ruedas y terminaciones. Es una opción práctica para recuperar frescura y prolijidad en el uso cotidiano, con el criterio de trabajo de un taller de detail.</p><figure class="service-photo"><img src="assets/servicios-generados/lavado.jpg" alt="Lavado exterior completo de un vehículo"></figure></div>
             </details>
             <details class="service">
               <summary><h3>Lavado y acondicionado de motor</h3><span class="service-toggle" aria-hidden="true"></span></summary>
-              <div class="service-body"><p>Limpieza estética del vano motor para remover grasa, tierra, polvo y residuos y facilitar la inspección visual.</p><figure class="service-photo crop-top"><img src="assets/servicios/motor-opticas.png" alt="Vano motor después de una limpieza detallada"></figure></div>
+              <div class="service-body"><p>El vano motor también forma parte de la presentación del vehículo. Removemos grasa, tierra, polvo y residuos con atención a los componentes, para lograr un aspecto más ordenado. La limpieza estética además facilita observar visualmente el estado general de la zona, sin reemplazar una revisión mecánica.</p><figure class="service-photo"><img src="assets/servicios-generados/motor.jpg" alt="Limpieza y acondicionado profesional del vano motor"></figure></div>
             </details>
             <details class="service">
               <summary><h3>Preparado para la venta</h3><span class="service-toggle" aria-hidden="true"></span></summary>
-              <div class="service-body"><p>Servicio integral para mejorar la presentación del vehículo antes de fotografiarlo, publicarlo o recibir compradores.</p><figure class="service-photo crop-sale"><img src="assets/servicios/preparado-venta.png" alt="Distintas tareas incluidas en la preparación de un vehículo para la venta"></figure></div>
+              <div class="service-body"><p>La primera impresión cuenta cuando un auto sale a la venta. Combinamos las tareas estéticas que más ayudan a mejorar su presentación: limpieza interior, cuidado de carrocería y detalles visibles, según su estado. Lo preparamos para que luzca mejor en fotos y durante las visitas de posibles compradores.</p><figure class="service-photo"><img src="assets/servicios-generados/preparado-venta.jpg" alt="Vehículo acondicionado y preparado para la venta"></figure></div>
             </details>
             <details class="service">
               <summary><h3>Retoques de pintura</h3><span class="service-toggle" aria-hidden="true"></span></summary>
-              <div class="service-body"><p>Corrección de rayones y marcas puntuales cuando el estado de la superficie permite evitar el repintado completo.</p><figure class="service-photo crop-top"><img src="assets/servicios/pintura-polarizado.png" alt="Retoque de pintura sobre una marca puntual"></figure></div>
+              <div class="service-body"><p>Pequeños rayones, marcas y detalles puntuales pueden restarle presencia a todo el vehículo. Evaluamos el daño y, cuando la superficie lo permite, realizamos una corrección localizada. Buscamos atenuar la imperfección con un trabajo preciso, sin prometer que cada marca pueda desaparecer por completo.</p><figure class="service-photo"><img src="assets/servicios-generados/retoque-pintura.jpg" alt="Retoque localizado de una marca sobre la pintura"></figure></div>
             </details>
             <details class="service">
               <summary><h3>Polarizado</h3><span class="service-toggle" aria-hidden="true"></span></summary>
-              <div class="service-body"><p>Instalación de láminas para sumar privacidad, protección UV y mayor confort térmico en el interior.</p><figure class="service-photo crop-bottom"><img src="assets/servicios/pintura-polarizado.png" alt="Lámina de polarizado aplicada sobre un vidrio"></figure></div>
+              <div class="service-body"><p>Una instalación cuidada de láminas transforma el aspecto de los vidrios y suma privacidad al habitáculo. Según el producto elegido, también puede contribuir a reducir el ingreso de radiación solar y mejorar el confort. Te orientamos sobre alternativas y tonos antes de definir el trabajo.</p><figure class="service-photo"><img src="assets/servicios-generados/polarizado.jpg" alt="Instalación profesional de lámina de polarizado"></figure></div>
             </details>
           </div>
         </div>
@@ -379,18 +389,27 @@
     <section class="proof" id="resultados">
       <div class="wrap proof-grid">
         <div class="proof-copy">
-          <p class="eyebrow">Resultados visibles</p>
-          <h2>El detalle cambia todo</h2>
-          <p>No todos los autos necesitan el mismo proceso. Primero evaluamos el estado general y después definimos una solución realista.</p>
-          <ul class="check-list">
-            <li>Evaluación del estado del vehículo</li>
-            <li>Explicación clara del trabajo recomendado</li>
-            <li>Contacto directo durante la coordinación</li>
-          </ul>
+          <p class="eyebrow">Nuestros trabajos</p>
+          <h2>Seguinos en redes</h2>
+          <p>Podés ver algunos de nuestros trabajos realizados en nuestras redes sociales. Hoy compartimos novedades y resultados en Instagram; la página de Facebook está en preparación.</p>
         </div>
-        <figure class="proof-image">
-          <img src="assets/antes-despues.jpg" alt="Comparación del vehículo antes y después de un trabajo realizado por Boost Garage">
-        </figure>
+        <div class="social-links" aria-label="Redes sociales de Boost Garage">
+          <a class="social-tile instagram" href="https://www.instagram.com/boostgaragedetail/" target="_blank" rel="noopener noreferrer" aria-label="Ver trabajos de Boost Garage en Instagram">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm5 3a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm5.5-2.75a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5Z"/></svg>
+            <strong>Instagram</strong><small>@boostgaragedetail · Ver trabajos</small>
+          </a>
+          <div class="social-tile facebook" aria-label="Facebook de Boost Garage, próximamente">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M13.5 22v-9h3l.45-3.5H13.5V7.27c0-1.01.28-1.7 1.73-1.7H17V2.44A24.6 24.6 0 0 0 14.42 2C11.87 2 10.13 3.56 10.13 6.43V9.5H7.25V13h2.88v9h3.37Z"/></svg>
+            <strong>Facebook</strong><small>Próximamente</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="shop" id="tienda" aria-labelledby="tienda-titulo">
+      <div class="wrap shop-box">
+        <div><p class="eyebrow">Próxima etapa</p><h2 id="tienda-titulo">Tienda</h2><p>Queremos incorporar productos Toxic Shine para el cuidado de tu auto. El catálogo, la disponibilidad y la forma de compra todavía están por definir.</p></div>
+        <span class="shop-status">Próximamente</span>
       </div>
     </section>
 
@@ -412,14 +431,13 @@
       <div class="wrap contact-box">
         <div>
           <h2>¿Qué necesita tu auto?</h2>
-          <p>Escribinos por WhatsApp. Con unas fotos podemos orientarte y preparar una propuesta para tu vehículo.</p>
+          <p>Contanos qué querés mejorar y, si podés, envianos algunas fotos de tu vehículo. Con esa información podemos orientarte sobre las opciones más convenientes y preparar una propuesta acorde a lo que necesita tu auto.</p>
         </div>
         <div class="contact-actions">
           <a class="button" href="https://wa.me/5491165201932?text=Hola%20Boost%20Garage%2C%20quiero%20consultar%20por%20mi%20auto" target="_blank" rel="noopener">
             <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12.04 2a9.84 9.84 0 0 0-8.48 14.8L2 22l5.34-1.5A9.94 9.94 0 1 0 12.04 2Zm0 17.98a8.1 8.1 0 0 1-4.13-1.13l-.3-.18-3.17.89.85-3.08-.2-.32A8.02 8.02 0 1 1 12.04 20Zm4.45-6.03c-.24-.12-1.44-.71-1.67-.79-.22-.08-.38-.12-.55.12-.16.24-.63.79-.77.95-.14.16-.28.18-.53.06-.24-.12-1.03-.38-1.96-1.21a7.35 7.35 0 0 1-1.35-1.68c-.14-.24-.01-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.32-.75-1.81-.2-.48-.4-.4-.55-.41h-.47c-.16 0-.42.06-.65.3-.22.24-.85.83-.85 2.03 0 1.19.87 2.35.99 2.51.12.16 1.71 2.61 4.14 3.66.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.44-.59 1.64-1.15.2-.57.2-1.05.14-1.15-.06-.1-.22-.16-.47-.28Z"/></svg>
-            Hablar con Boost Garage
+            Consultar por WhatsApp
           </a>
-          <small>WhatsApp 11 6520-1932</small>
         </div>
       </div>
     </section>
@@ -427,7 +445,7 @@
 
   <footer>
     <div class="wrap footer-grid">
-      <span>Boost Garage Car Detail · Wilde, Buenos Aires</span>
+      <div class="footer-brand"><img src="assets/boost-garage-logo.png" alt="Boost Garage Car Detail"><address>Cordero 5686<br>Wilde, Avellaneda, Buenos Aires</address></div>
       <a href="https://www.instagram.com/boostgaragedetail/" target="_blank" rel="noopener">Instagram @boostgaragedetail</a>
     </div>
   </footer>
