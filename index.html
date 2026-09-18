@@ -207,9 +207,10 @@
     .product-info { display: flex; flex: 1; flex-direction: column; gap: .35rem; padding: .75rem; }
     .product-category { margin: 0; color: #ff5c61; font-size: .75rem; font-weight: 900; letter-spacing: .09em; text-transform: uppercase; }
     .product-info h3 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin: 0; font-size: 1.17rem; letter-spacing: .06em; line-height: 1.14; }
+    .product-presentation { align-self: flex-start; margin: .08rem 0 0; padding: .18rem .45rem; border: 1px solid #4a4f57; border-radius: 999px; color: #d7dbe0; font-family: Arial, Helvetica, sans-serif; font-size: .72rem; font-weight: 800; letter-spacing: .05em; line-height: 1.15; }
     .product-description { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; flex: 1; margin: .1rem 0; color: #b8bec4; font-size: .875rem; line-height: 1.4; }
     .product-price { margin: .1rem 0 .35rem; font-size: 1.18rem; font-weight: 900; letter-spacing: .02em; }
-    .product-add { width: 100%; min-height: 40px; border: 1px solid var(--red); border-radius: 8px; background: var(--red); color: var(--white); font: inherit; font-size: .875rem; font-weight: 850; cursor: pointer; }
+    .product-add { width: 100%; min-height: 40px; margin-top: auto; border: 1px solid var(--red); border-radius: 8px; background: var(--red); color: var(--white); font: inherit; font-size: .875rem; font-weight: 850; cursor: pointer; }
     .product-add:hover, .product-add:focus-visible { background: #ea1119; }
     .shop-note { margin: 1.4rem 0 0; color: var(--steel); font-size: .85rem; }
     .shop-empty { padding: 2rem; border: 1px dashed #60656d; border-radius: 12px; color: #c9cdd1; }
@@ -598,6 +599,7 @@
         category: String(raw.categoria ?? raw.category ?? '').trim(),
         price, description: String(raw.descripcion ?? raw.description ?? '').trim(),
         usage: String(raw.modo_uso ?? raw.usage ?? '').trim(),
+        presentation: String(raw.presentacion ?? raw.presentation ?? '').trim(),
         imageUrl: /^(https?:\/\/|assets\/)/i.test(imageUrl) ? imageUrl : '',
         imageNote: String(raw.nota_imagen ?? raw.imageNote ?? '').trim(),
         visible: String(raw.visible ?? 'SI').trim().toUpperCase(),
@@ -677,9 +679,12 @@
         const size = document.createElement('span'); size.className = 'product-title-size'; size.textContent = sizeMatch[2];
         title.append(size);
       } else title.textContent = product.name;
+      const presentation = document.createElement('p'); presentation.className = 'product-presentation'; presentation.textContent = product.presentation;
       const price = document.createElement('p'); price.className = 'product-price'; price.textContent = money.format(product.price);
       const add = document.createElement('button'); add.className = 'product-add'; add.type = 'button'; add.dataset.id = product.id; add.textContent = 'Agregar al carrito'; add.setAttribute('aria-label', `Agregar ${product.name} al carrito`);
-      info.append(category, title, price, add); card.append(image, more, info);
+      info.append(category, title);
+      if (product.presentation) info.append(presentation);
+      info.append(price, add); card.append(image, more, info);
       return card;
     }
     function renderCategories() {
@@ -712,7 +717,10 @@
     }
     document.addEventListener('toggle', event => {
       const panel = event.target;
-      if (panel instanceof HTMLDetailsElement && panel.classList.contains('product-more') && panel.open) closeProductInfo(panel);
+      if (panel instanceof HTMLDetailsElement && panel.classList.contains('product-more') && panel.open) {
+        closeProductInfo(panel);
+        requestAnimationFrame(() => panel.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' }));
+      }
     }, true);
     document.addEventListener('pointerdown', event => {
       const activePanel = event.target.closest?.('.product-more');
