@@ -203,6 +203,7 @@
     .product-more-body { padding: .1rem .75rem .8rem; color: #c4c9ce; font-size: .82rem; line-height: 1.5; }
     .product-more-body p { margin: .55rem 0 0; }
     .product-more-body strong { display: block; margin-bottom: .12rem; color: #fff; font-size: .76rem; letter-spacing: .06em; text-transform: uppercase; }
+    .product-title-size { font-family: Arial, Helvetica, sans-serif; font-size: .72em; font-weight: 900; letter-spacing: .04em; white-space: nowrap; }
     .product-info { display: flex; flex: 1; flex-direction: column; gap: .35rem; padding: .75rem; }
     .product-category { margin: 0; color: #ff5c61; font-size: .75rem; font-weight: 900; letter-spacing: .09em; text-transform: uppercase; }
     .product-info h3 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin: 0; font-size: 1.17rem; letter-spacing: .06em; line-height: 1.14; }
@@ -669,7 +670,13 @@
       more.append(moreTitle, moreBody);
       const info = document.createElement('div'); info.className = 'product-info';
       const category = document.createElement('p'); category.className = 'product-category'; category.textContent = product.category;
-      const title = document.createElement('h3'); title.textContent = product.name;
+      const title = document.createElement('h3');
+      const sizeMatch = product.name.match(/^(.*?)(\s+\d[\d\s×x.,-]*(?:ml|l|cm)?)$/i);
+      if (sizeMatch) {
+        title.append(document.createTextNode(sizeMatch[1]));
+        const size = document.createElement('span'); size.className = 'product-title-size'; size.textContent = sizeMatch[2];
+        title.append(size);
+      } else title.textContent = product.name;
       const price = document.createElement('p'); price.className = 'product-price'; price.textContent = money.format(product.price);
       const add = document.createElement('button'); add.className = 'product-add'; add.type = 'button'; add.dataset.id = product.id; add.textContent = 'Agregar al carrito'; add.setAttribute('aria-label', `Agregar ${product.name} al carrito`);
       info.append(category, title, price, add); card.append(image, more, info);
@@ -698,6 +705,24 @@
         ui.grid.append(empty);
       }
     }
+    function closeProductInfo(except = null) {
+      document.querySelectorAll('.product-more[open]').forEach(panel => {
+        if (panel !== except) panel.open = false;
+      });
+    }
+    document.addEventListener('toggle', event => {
+      const panel = event.target;
+      if (panel instanceof HTMLDetailsElement && panel.classList.contains('product-more') && panel.open) closeProductInfo(panel);
+    }, true);
+    document.addEventListener('pointerdown', event => {
+      const activePanel = event.target.closest?.('.product-more');
+      closeProductInfo(activePanel);
+    }, true);
+    window.addEventListener('wheel', () => closeProductInfo(), { passive: true });
+    window.addEventListener('touchmove', () => closeProductInfo(), { passive: true });
+    document.addEventListener('keydown', event => {
+      if (event.key !== 'Tab' && event.key !== 'Shift') closeProductInfo();
+    }, true);
     function openCart() {
       previousFocus = document.activeElement;
       ui.overlay.hidden = false; ui.drawer.hidden = false;
