@@ -194,6 +194,15 @@
     .product-image img[src*="static.toxicshine.com.ar"] { filter: contrast(1.14) brightness(1.07); transform: scale(1.25); }
     .product-image span { padding: 1rem; font-size: .85rem; }
     .product-image .product-image-note { position: absolute; left: .5rem; right: .5rem; bottom: .4rem; padding: .25rem .35rem; border-radius: 4px; background: rgba(11,12,14,.84); color: #fff; font-size: .68rem; line-height: 1.2; }
+    .product-more { border-top: 1px solid #34383f; border-bottom: 1px solid #34383f; background: #15171a; }
+    .product-more summary { padding: .58rem .75rem; color: #fff; font-size: .8rem; font-weight: 900; letter-spacing: .1em; list-style: none; cursor: pointer; }
+    .product-more summary::-webkit-details-marker { display: none; }
+    .product-more summary::before { content: "+"; display: inline-block; margin-right: .45rem; color: #ff343b; font-size: 1rem; }
+    .product-more[open] summary::before { content: "−"; }
+    .product-more summary:hover, .product-more summary:focus-visible { background: #202329; color: #fff; }
+    .product-more-body { padding: .1rem .75rem .8rem; color: #c4c9ce; font-size: .82rem; line-height: 1.5; }
+    .product-more-body p { margin: .55rem 0 0; }
+    .product-more-body strong { display: block; margin-bottom: .12rem; color: #fff; font-size: .76rem; letter-spacing: .06em; text-transform: uppercase; }
     .product-info { display: flex; flex: 1; flex-direction: column; gap: .35rem; padding: .75rem; }
     .product-category { margin: 0; color: #ff5c61; font-size: .75rem; font-weight: 900; letter-spacing: .09em; text-transform: uppercase; }
     .product-info h3 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin: 0; font-size: 1.17rem; letter-spacing: .06em; line-height: 1.14; }
@@ -535,9 +544,10 @@
   <a class="mobile-whatsapp" href="https://wa.me/5491165201932?text=Hola%20Boost%20Garage%2C%20quiero%20hacer%20una%20consulta" target="_blank" rel="noopener" aria-label="Consultar por WhatsApp">
     <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12.04 2a9.84 9.84 0 0 0-8.48 14.8L2 22l5.34-1.5A9.94 9.94 0 1 0 12.04 2Zm0 17.98a8.1 8.1 0 0 1-4.13-1.13l-.3-.18-3.17.89.85-3.08-.2-.32A8.02 8.02 0 1 1 12.04 20Zm4.45-6.03c-.24-.12-1.44-.71-1.67-.79-.22-.08-.38-.12-.55.12-.16.24-.63.79-.77.95-.14.16-.28.18-.53.06-.24-.12-1.03-.38-1.96-1.21a7.35 7.35 0 0 1-1.35-1.68c-.14-.24-.01-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.32-.75-1.81-.2-.48-.4-.4-.55-.41h-.47c-.16 0-.42.06-.65.3-.22.24-.85.83-.85 2.03 0 1.19.87 2.35.99 2.51.12.16 1.71 2.61 4.14 3.66.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.44-.59 1.64-1.15.2-.57.2-1.05.14-1.15-.06-.1-.22-.16-.47-.28Z"/></svg>
   </a>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script>
-    // Al recibir el enlace CSV publicado de Google Sheets, se configura aquí.
-    const SHEET_CSV_URL = '';
+    const SHEET_XLSX_URL = 'https://docs.google.com/spreadsheets/d/1HTGzZ-SRheHMvM7JfM_8I76VhUPxsV-O/export?format=xlsx';
+    const SHEET_TAB_NAME = 'Catalogo';
     const LOCAL_CATALOG_URL = 'assets/catalogo-toxic-shine.json';
     const money = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 });
     const ui = {
@@ -583,10 +593,11 @@
       const id = Number(raw.id);
       const imageUrl = String(raw.imagen_url ?? raw.imageUrl ?? '').trim();
       return {
-        id, name: String(raw.nombre ?? raw.name ?? '').trim(),
+        id, name: String(raw.producto ?? raw.nombre ?? raw.name ?? '').trim(),
         category: String(raw.categoria ?? raw.category ?? '').trim(),
         price, description: String(raw.descripcion ?? raw.description ?? '').trim(),
-        imageUrl: /^https?:\/\//i.test(imageUrl) ? imageUrl : '',
+        usage: String(raw.modo_uso ?? raw.usage ?? '').trim(),
+        imageUrl: /^(https?:\/\/|assets\/)/i.test(imageUrl) ? imageUrl : '',
         imageNote: String(raw.nota_imagen ?? raw.imageNote ?? '').trim(),
         visible: String(raw.visible ?? 'SI').trim().toUpperCase(),
       };
@@ -642,13 +653,26 @@
         const note = document.createElement('span'); note.className = 'product-image-note'; note.textContent = product.imageNote;
         image.append(note);
       }
+      const more = document.createElement('details'); more.className = 'product-more';
+      const moreTitle = document.createElement('summary'); moreTitle.textContent = 'INFO';
+      const moreBody = document.createElement('div'); moreBody.className = 'product-more-body';
+      const purpose = document.createElement('p');
+      const purposeLabel = document.createElement('strong'); purposeLabel.textContent = 'Para qué sirve';
+      purpose.append(purposeLabel, document.createTextNode(product.description));
+      moreBody.append(purpose);
+      if (product.usage) {
+        const usage = document.createElement('p');
+        const usageLabel = document.createElement('strong'); usageLabel.textContent = 'Cómo usarlo';
+        usage.append(usageLabel, document.createTextNode(product.usage));
+        moreBody.append(usage);
+      }
+      more.append(moreTitle, moreBody);
       const info = document.createElement('div'); info.className = 'product-info';
       const category = document.createElement('p'); category.className = 'product-category'; category.textContent = product.category;
       const title = document.createElement('h3'); title.textContent = product.name;
-      const description = document.createElement('p'); description.className = 'product-description'; description.textContent = product.description;
       const price = document.createElement('p'); price.className = 'product-price'; price.textContent = money.format(product.price);
       const add = document.createElement('button'); add.className = 'product-add'; add.type = 'button'; add.dataset.id = product.id; add.textContent = 'Agregar al carrito'; add.setAttribute('aria-label', `Agregar ${product.name} al carrito`);
-      info.append(category, title, description, price, add); card.append(image, info);
+      info.append(category, title, price, add); card.append(image, more, info);
       return card;
     }
     function renderCategories() {
@@ -723,12 +747,41 @@
       const text = `Hola Boost Garage, quiero consultar por este pedido de la tienda:\n\n${lines.join('\n')}\n\nSubtotal: ${money.format(subtotal)}\n\n¿Me confirman disponibilidad, pago y entrega?`;
       window.open(`https://wa.me/5491165201932?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
     });
+    async function loadSheetPrices() {
+      if (!SHEET_XLSX_URL || !window.XLSX) throw new Error('No está disponible el lector del catálogo online.');
+      const response = await fetch(SHEET_XLSX_URL, { cache: 'no-store' });
+      if (!response.ok) throw new Error(`Catálogo online no disponible (${response.status})`);
+      const workbook = XLSX.read(await response.arrayBuffer(), { type: 'array' });
+      const sheet = workbook.Sheets[SHEET_TAB_NAME] || workbook.Sheets[workbook.SheetNames[0]];
+      if (!sheet) throw new Error('No se encontró la pestaña de productos.');
+      return XLSX.utils.sheet_to_json(sheet, { defval: '', raw: true });
+    }
     async function loadCatalog() {
       try {
-        const url = SHEET_CSV_URL || LOCAL_CATALOG_URL;
-        const response = await fetch(url, { cache: 'no-store' });
-        if (!response.ok) throw new Error(`Catálogo no disponible (${response.status})`);
-        const raw = SHEET_CSV_URL ? parseCsv(await response.text()) : await response.json();
+        const localResponse = await fetch(LOCAL_CATALOG_URL, { cache: 'no-store' });
+        if (!localResponse.ok) throw new Error(`Catálogo local no disponible (${localResponse.status})`);
+        const localRaw = await localResponse.json();
+        let raw = localRaw;
+        try {
+          const sheetRaw = await loadSheetPrices();
+          const localById = new Map(localRaw.map(item => [Number(item.id), item]));
+          const merged = [];
+          const sheetIds = new Set();
+          for (const item of sheetRaw) {
+            const sheetItem = normalized(item);
+            if (!Number.isInteger(sheetItem.id) || !Number.isFinite(sheetItem.price) || sheetItem.price <= 0) continue;
+            sheetIds.add(sheetItem.id);
+            const localItem = localById.get(sheetItem.id);
+            if (localItem) {
+              merged.push({ ...localItem, price: sheetItem.price, visible: sheetItem.visible });
+            } else if (sheetItem.name && sheetItem.category) {
+              merged.push(item);
+            }
+          }
+          raw = merged.length ? merged : localRaw;
+        } catch (sheetError) {
+          console.warn('Se usó el catálogo local porque no se pudo leer Drive.', sheetError);
+        }
         const seen = new Set();
         products = raw.map(normalized).filter(p => {
           if (!Number.isInteger(p.id) || seen.has(p.id) || !p.name || !p.category || !Number.isFinite(p.price) || p.price <= 0 || p.visible !== 'SI') return false;
